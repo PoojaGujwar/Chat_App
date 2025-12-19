@@ -33,9 +33,10 @@ const Register = ({ setUser }) => {
   };
 
   return (
-    <div className="card  py-5 text-center">
+    <div className="auth-container">
+    <div className="card  auth-card">
       <div className="card-body">
-        <h2>Register</h2>
+        <h4>Register</h4>
         <p>Not a user yet? Register here</p>
         <p>{registerationSuccess}</p>
         <input
@@ -43,7 +44,7 @@ const Register = ({ setUser }) => {
           placeholder="username"
           name="username"
           value={username}
-          className="form-control mt-3"
+          className="form-control"
           onChange={(e) => setUsername(e.target.value)}
         />
         <input
@@ -51,11 +52,10 @@ const Register = ({ setUser }) => {
           placeholder="password"
           name="password"
           value={password}
-          className="form-control mt-3"
+          className="form-control"
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
-          className="btn btn-success btn-lg mt-3"
           onClick={handleRegister}
         >
           Register
@@ -65,6 +65,7 @@ const Register = ({ setUser }) => {
         </p>
        
       </div>
+    </div>
     </div>
   );
 };
