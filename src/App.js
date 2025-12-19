@@ -15,7 +15,7 @@ function App() {
     <BrowserRouter>
     <div className="app">
       <Routes>
-        <Route path="/" element={<Login/>}/>
+        <Route path="/" element={user ? <Navigate to="/chat" /> : <Login setUser={setUser} />}/>
         <Route path="/login" element ={user?(<Navigate to ="/chat"/>):(<Login setUser={setUser} />)}/>
         <Route path="/register" element ={user ? (<Navigate to ="/chat"/>):(<Register setUser={setUser}/>)}/>
         <Route path="/chat" element={user ? <Chat user={user}/>:(<Navigate to ="login"/>)}/>
