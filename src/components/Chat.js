@@ -3,16 +3,18 @@ import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import "./chat.css"
 import {io} from "socket.io-client"
+import { useNavigate } from "react-router-dom";
 
 const socket = io(`https://chat-chat-if63.onrender.com`)
 
-export default function Chat({ user }) {
+export default function Chat({ user, setUser}) {
   const [users, setUsers] = useState([]);
   const [messages, setMessage] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [currentMessage, setCurrentMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const typingRef = React.useRef(null);
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -92,11 +94,23 @@ export default function Chat({ user }) {
       })
     },1000)
   }
+  const handleLogout =()=>{
+    setUser(null)
+    navigate("/login")
+  }
 
   return (
-    <div className="chat-container">
+    <>
+    <div className="d-flex justify-content-end">
+      <div className="">
       <h1>Welcome, {user.username}</h1>
-      <div className="chat-list">
+      </div>
+      <div className="">
+      <button onClick={handleLogout} className="btn-primary">Logout</button>
+      </div>
+      </div>
+    <div className="chat-container">
+      <div className="chat-list ">
         <h3>Chats</h3>
         {users.map((u) => (
           <div
@@ -106,7 +120,7 @@ export default function Chat({ user }) {
         </div>
         {currentChat && (
           <div className="chat-window">
-            <h5>You are chatting with {currentChat}</h5>
+            {/* <h5>You are chatting with {currentChat}</h5> */}
             <Message messages={messages} user={user} />
             {isTyping && (
               <p style={{fontSize:"12px",color:"gray"}}>{currentChat} is typing</p>
@@ -126,6 +140,7 @@ export default function Chat({ user }) {
           </div>
         )}
       </div>
+      </>
     
   );
 }

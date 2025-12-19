@@ -1,38 +1,55 @@
 .chat-container {
-    max-width: 900px;
+    width: 100%;
     min-height: 100vh;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+}
+.chat-container h1{
+    font-size: 18px;
+    margin-right: auto;
 }
 
+.chat-container .btn{
+margin-left: 10px;
+}
 .chat-list{
     border-right:1px solid #ccc;
     padding: 10px;
-    width:200px;
-    float:left;
+    width:100%;
 }
 .chat-user{
     padding:10px;
     cursor: pointer;
     border-bottom:1px solid #eee
 }
-.chat-user:hover{
-    background-color: #f0f0f0;
-}
-.chat-user.active{
-    background-color: #d0f0d0;
-}
-.chat-window {
-    margin-left: 210px;
+.chat-window{
+    flex:1;
     padding: 10px;
-  }
-    
-  .btn-primary{
-    background-color: #daf8cb;
-  }
-  .message-field{
-    min-width: 600px
-  }
+}
+.message-field{
+    width: 100%;
+}
+ 
+.btn-primary{
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+}
+
+ @media (max-width:768px){
+    .chat-container{
+        flex-direction: column;
+    }
+    .chat-list{
+        width: 100%;
+        height: 30%;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+    }
+    .chat-window{
+        width: 100%;
+        height: 70%;
+    }
+ }
+
+ 
+  
