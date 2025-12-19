@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Register from './Register'
 
 export default function Login({setUser}) {
     const [username,setUsername] = useState('')
@@ -31,7 +32,7 @@ setLoginSuccess('')
         <h2>Login</h2>
         <p>Login with your credentials to continue.</p>
         {loginSuccess&& <p>{loginSuccess}</p>}
-        <form onSubmit={handleLogin}>
+<form onSubmit={handleLogin}>
         <input type='text'
         placeholder='username'
         value={username}
@@ -47,6 +48,9 @@ setLoginSuccess('')
         />
         <button className='btn btn-success mt-3'>Login</button>
         </form>
+        <p>
+          Don't have an account?{""}<Link to="/register">Register</Link>
+        </p>
         </div>
     </div>
     
