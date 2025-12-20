@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import "./chat.css"
 import {io} from "socket.io-client"
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import EmojiPicker from "emoji-picker-react";
+
 
 const socket = io(`https://chat-chat-if63.onrender.com`)
 
@@ -14,6 +16,7 @@ export default function Chat({ user, setUser}) {
   const [currentMessage, setCurrentMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const typingRef = React.useRef(null);
+  const [showEmoji, setShowEmoji] = useState(false)
   const navigate = useNavigate()
 
 
@@ -98,19 +101,25 @@ export default function Chat({ user, setUser}) {
     setUser(null)
     navigate("/login")
   }
-
+  const handleBackToChat =()=>{
+    setCurrentChat(null)
+    setMessage([])
+  }
+const onEmojiClick =(emojiData)=>{
+  console.log(emojiData)
+  setCurrentMessage((preValue)=>preValue+emojiData.emoji)
+  setShowEmoji(false)
+}
   return (
     <>
-    <div className="d-flex justify-content-end">
-      <div className="">
-      <h1>Welcome, {user.username}</h1>
-      </div>
-      <div className="">
+    <div className="chat-container">
+      <div className="chat-header">
+      <h1>Chat App</h1>
       <button onClick={handleLogout} className="btn-primary">Logout</button>
       </div>
       </div>
-    <div className="chat-container">
-      <div className="chat-list ">
+    <div className="chat-body">
+      <div className="chat-sidebar">
         <h3>Chats</h3>
         {users.map((u) => (
           <div
@@ -118,27 +127,34 @@ export default function Chat({ user, setUser}) {
            onClick={() => fetchMessage(u.username)}>{u.username}</div>
         ))}
         </div>
+        <div className="chat-main">
         {currentChat && (
-          <div className="chat-window">
+        <>
+            <div className="messages-area">
             {/* <h5>You are chatting with {currentChat}</h5> */}
-            <Message messages={messages} user={user} />
+            <Message messages={messages} user={user} onBack ={handleBackToChat}/>
             {isTyping && (
               <p style={{fontSize:"12px",color:"gray"}}>{currentChat} is typing</p>
             )}
+            </div>
             <div className="message-field">
               <input
                 type="text"
                 placeholder="Types a message.."
                 value={currentMessage}
-                style={{ minWidth: "500px" }}
                 onChange={handleTyping}
               />
+                {showEmoji && <div className="emoji-box"><EmojiPicker onEmojiClick={onEmojiClick}/></div>}
+      
+              <button onClick={()=>setShowEmoji(!showEmoji)}
+              className="btn-emoji btn-primary" >😊</button>
               <button className="btn-primary" onClick={sendMessage}>
                 Send
               </button>
             </div>
-          </div>
+          </>
         )}
+      </div>
       </div>
       </>
     
