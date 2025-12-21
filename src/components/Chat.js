@@ -103,7 +103,7 @@ export default function Chat({ user, setUser }) {
   const handleTyping = (e) => {
     setCurrentMessage(e.target.value)
     console.log("Emit typinnn", currentChat, e.target.value)
-    if (socketRef.current) {
+    if (socketRef.current && currentChat) {
       socketRef.current.emit("typing", {
         sender: user.username,
         receiver: currentChat
@@ -157,7 +157,7 @@ export default function Chat({ user, setUser }) {
                 {/* <h5>You are chatting with {currentChat}</h5> */}
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
                 {isTyping && (
-                  <p style={{ fontSize: "12px", color: "pink" }}>{currentChat} is typing</p>
+                  <p style={{ fontSize: "100px", color: "" }}>{currentChat} is typing</p>
                 )}
               </div>
               <div className="message-field">
