@@ -101,7 +101,7 @@ export default function Chat({ user, setUser}) {
 
   const handleTyping =(e)=>{
     setCurrentMessage(e.target.value)
-
+console.log("Emit typinnn", currentChat, e.target.value)
     if(socketRef.current){
  socketRef.current.emit("typing",{
       sender:user.username,
