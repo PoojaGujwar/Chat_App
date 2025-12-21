@@ -1,5 +1,14 @@
 import "./message.css"
-const Message =({messages,user, onBack})=>{
+const Message =({messages,user,onBack})=>{
+
+    const formateTime =(time)=>{
+        const date = new Date(time);
+        console.log(date,messages)
+        return date.toLocaleDateString([],{
+            hour:"2-digit",
+            minute:"2-digit"
+        })
+    }
    
     return (
         <>
@@ -16,6 +25,7 @@ const Message =({messages,user, onBack})=>{
           }`}
                 >
                    {msg.message}
+                   <div>{formateTime(msg.createdAt)}</div>
                 </div>
             ))}
         </div>
