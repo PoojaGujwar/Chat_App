@@ -58,13 +58,13 @@ export default function Chat({ user, setUser}) {
         setMessage((prev)=>[...prev,data])
       }
     })
-    socketRef.current.on("typing",({sender})=>{
-      if(sender && sender === currentChat){
+    socketRef.current.on("typing",({sender, receiver})=>{
+      if( sender === currentChat && receiver === user.username){
         setIsTyping(true)
       }
     })
-    socketRef.current.on("stop_typing",({sender})=>{
-      if(sender === currentChat){
+    socketRef.current.on("stop_typing",({sender, receiver})=>{
+      if(sender === currentChat && receiver === user.username){
         setIsTyping(false);
       }
     })
@@ -74,6 +74,32 @@ export default function Chat({ user, setUser}) {
       socketRef.current.off("stop_typing")
     }
   }, [currentChat]);
+
+  useEffect(() => {
+  if (!socketRef.current || !currentChat) return;
+
+  const onTyping = ({ sender, receiver }) => {
+    console.log("Typing received", sender, receiver);
+    if (sender === currentChat && receiver === user.username) {
+      setIsTyping(true);
+    }
+  };
+
+  const onStopTyping = ({ sender, receiver }) => {
+    if (sender === currentChat && receiver === user.username) {
+      setIsTyping(false);
+    }
+  };
+
+  socketRef.current.on("typing", onTyping);
+  socketRef.current.on("stop_typing", onStopTyping);
+
+  return () => {
+    socketRef.current.off("typing", onTyping);
+    socketRef.current.off("stop_typing", onStopTyping);
+  };
+}, [currentChat, user.username]);
+
 
   const fetchMessage = async (receiver) => {
     try {
