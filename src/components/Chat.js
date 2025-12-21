@@ -91,7 +91,7 @@ export default function Chat({ user, setUser}) {
 
   const sendMessage = () => {
     const messageData ={
-      sender:user.username,receiver:currentChat,message:currentMessage
+      sender:user.username,receiver:currentChat,message:currentMessage,createdAt: new Date().toISOString()
     }
     console.log(messageData)
     socketRef.current.emit("send_message",messageData)
