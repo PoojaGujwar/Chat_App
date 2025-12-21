@@ -19,6 +19,11 @@ export default function Chat({ user, setUser}) {
   const [showEmoji, setShowEmoji] = useState(false)
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (user?.username) {
+      socket.emit("join", user.username);
+    }
+  }, [user]);
 
   useEffect(() => {
     const fetchUsers = async () => {
