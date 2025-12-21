@@ -7,10 +7,6 @@ import { useNavigate, Link } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 
 
-
-
-const socket = io(`https://chat-chat-if63.onrender.com`)
-
 export default function Chat({ user, setUser}) {
   const [users, setUsers] = useState([]);
   const [messages, setMessage] = useState([]);
@@ -37,45 +33,7 @@ export default function Chat({ user, setUser}) {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!socketRef.current) return;
-
-    const fetchUsers = async () => {
-      try {
-        const { data } = await axios(
-          `https://chat-chat-if63.onrender.com/users`,
-          { params: { currentUser: user.username } }
-        );
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users", error);
-      }
-    };
-    fetchUsers();
-
-    socketRef.current.on("receive_message",(data)=>{
-      if(data.sender === currentChat || data.receiver === currentChat){
-        setMessage((prev)=>[...prev,data])
-      }
-    })
-    socketRef.current.on("typing",({sender, receiver})=>{
-      if( sender === currentChat && receiver === user.username){
-        setIsTyping(true)
-      }
-    })
-    socketRef.current.on("stop_typing",({sender, receiver})=>{
-      if(sender === currentChat && receiver === user.username){
-        setIsTyping(false);
-      }
-    })
-    return ()=>{
-      socketRef.current.off('receive_message')
-      socketRef.current.off("typing")
-      socketRef.current.off("stop_typing")
-    }
-  }, [currentChat]);
-
-  useEffect(() => {
+ useEffect(() => {
   if (!socketRef.current || !currentChat) return;
 
   const onTyping = ({ sender, receiver }) => {
@@ -99,6 +57,7 @@ export default function Chat({ user, setUser}) {
     socketRef.current.off("stop_typing", onStopTyping);
   };
 }, [currentChat, user.username]);
+
 
 
   const fetchMessage = async (receiver) => {
