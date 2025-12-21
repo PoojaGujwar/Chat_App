@@ -2,12 +2,12 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import "./chat.css"
-import {io} from "socket.io-client"
+import { io } from "socket.io-client"
 import { useNavigate, Link } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 
 
-export default function Chat({ user, setUser}) {
+export default function Chat({ user, setUser }) {
   const [users, setUsers] = useState([]);
   const [messages, setMessage] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -19,12 +19,30 @@ export default function Chat({ user, setUser}) {
   const socketRef = React.useRef(null)
 
   useEffect(() => {
-  socketRef.current = io("https://chat-chat-if63.onrender.com");
+    socketRef.current = io("https://chat-chat-if63.onrender.com");
 
-  return () => {
-    socketRef.current.disconnect();
+    return () => {
+      socketRef.current.disconnect();
+    };
+  }, []);
+  useEffect(() => {
+  if (!user?.username) return;
+
+  const fetchUsers = async () => {
+    try {
+      const { data } = await axios.get(
+        "https://chat-chat-if63.onrender.com/users",
+        { params: { currentUser: user.username } }
+      );
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users", error);
+    }
   };
-}, []);
+
+  fetchUsers();
+}, [user]);
+
 
 
   useEffect(() => {
@@ -33,32 +51,30 @@ export default function Chat({ user, setUser}) {
     }
   }, [user]);
 
- useEffect(() => {
-  if (!socketRef.current || !currentChat) return;
+  useEffect(() => {
+    if (!socketRef.current || !currentChat) return;
 
-  const onTyping = ({ sender, receiver }) => {
-    console.log("Typing received", sender, receiver);
-    if (sender === currentChat && receiver === user.username) {
-      setIsTyping(true);
-    }
-  };
+    const onTyping = ({ sender, receiver }) => {
+      console.log("Typing received", sender, receiver);
+      if (sender === currentChat && receiver === user.username) {
+        setIsTyping(true);
+      }
+    };
 
-  const onStopTyping = ({ sender, receiver }) => {
-    if (sender === currentChat && receiver === user.username) {
-      setIsTyping(false);
-    }
-  };
+    const onStopTyping = ({ sender, receiver }) => {
+      if (sender === currentChat && receiver === user.username) {
+        setIsTyping(false);
+      }
+    };
 
-  socketRef.current.on("typing", onTyping);
-  socketRef.current.on("stop_typing", onStopTyping);
+    socketRef.current.on("typing", onTyping);
+    socketRef.current.on("stop_typing", onStopTyping);
 
-  return () => {
-    socketRef.current.off("typing", onTyping);
-    socketRef.current.off("stop_typing", onStopTyping);
-  };
-}, [currentChat, user.username]);
-
-
+    return () => {
+      socketRef.current.off("typing", onTyping);
+      socketRef.current.off("stop_typing", onStopTyping);
+    };
+  }, [currentChat, user.username]);
 
   const fetchMessage = async (receiver) => {
     try {
@@ -75,95 +91,95 @@ export default function Chat({ user, setUser}) {
   };
 
   const sendMessage = () => {
-    const messageData ={
-      sender:user.username,receiver:currentChat,message:currentMessage,createdAt: new Date().toISOString()
+    const messageData = {
+      sender: user.username, receiver: currentChat, message: currentMessage, createdAt: new Date().toISOString()
     }
     console.log(messageData)
-    socketRef.current.emit("send_message",messageData)
-    setMessage((prev)=>[...prev,messageData])
+    socketRef.current.emit("send_message", messageData)
+    setMessage((prev) => [...prev, messageData])
     setCurrentMessage('')
   };
 
-  const handleTyping =(e)=>{
+  const handleTyping = (e) => {
     setCurrentMessage(e.target.value)
-console.log("Emit typinnn", currentChat, e.target.value)
-    if(socketRef.current){
- socketRef.current.emit("typing",{
-      sender:user.username,
-      receiver:currentChat
-    })
-    }
-   
-    if(typingRef.current){
-      clearTimeout(typingRef.current)
-    }
-    typingRef.current = setTimeout(()=>{
-      socketRef.current.emit("stop_typing",{
+    console.log("Emit typinnn", currentChat, e.target.value)
+    if (socketRef.current) {
+      socketRef.current.emit("typing", {
         sender: user.username,
         receiver: currentChat
       })
-    },1000)
+    }
+
+    if (typingRef.current) {
+      clearTimeout(typingRef.current)
+    }
+    typingRef.current = setTimeout(() => {
+      socketRef.current.emit("stop_typing", {
+        sender: user.username,
+        receiver: currentChat
+      })
+    }, 1000)
   }
-  const handleLogout =()=>{
+  const handleLogout = () => {
     setUser(null)
     navigate("/login")
   }
-  const handleBackToChat =()=>{
+  const handleBackToChat = () => {
     setCurrentChat(null)
     setMessage([])
   }
-const onEmojiClick =(emojiData)=>{
-  console.log(emojiData)
-  setCurrentMessage((preValue)=>preValue+emojiData.emoji)
-  setShowEmoji(false)
-}
+  const onEmojiClick = (emojiData) => {
+    console.log(emojiData)
+    setCurrentMessage((preValue) => preValue + emojiData.emoji)
+    setShowEmoji(false)
+  }
   return (
     <>
-    <div className="chat-container">
-      <div className="chat-header">
-      <h1>Chat App</h1>
-      <button onClick={handleLogout} className="btn-primary">Logout</button>
+      <div className="chat-container">
+        <div className="chat-header">
+          <h1>Chat App</h1>
+          <button onClick={handleLogout} className="btn-primary">Logout</button>
+        </div>
       </div>
-      </div>
-    <div className="chat-body">
-      <div className="chat-sidebar">
-        <h3>Chats</h3>
-        {users.map((u) => (
-          <div
-          className={`chat-user ${currentChat === u.username?"active":""}`}
-           onClick={() => fetchMessage(u.username)}>{u.username}</div>
-        ))}
+      <div className="chat-body">
+        <div className="chat-sidebar">
+          <h3>Chats</h3>
+          {users.map((u) => (
+            <div
+              className={`chat-user ${currentChat === u.username ? "active" : ""}`}
+              onClick={() => fetchMessage(u.username)}>{u.username}</div>
+          ))}
         </div>
         <div className="chat-main">
-        {currentChat && (
-        <>
-            <div className="messages-area">
-            {/* <h5>You are chatting with {currentChat}</h5> */}
-            <Message messages={messages} user={user} onBack ={handleBackToChat}/>
-            {isTyping && (
-              <p style={{fontSize:"12px",color:"pink"}}>{currentChat} is typing</p>
-            )}
-            </div>
-            <div className="message-field">
-              <input
-                type="text"
-                placeholder="Types a message.."
-                value={currentMessage}
-                onChange={handleTyping}
-              />
-                {showEmoji && <div className="emoji-box"><EmojiPicker onEmojiClick={onEmojiClick}/></div>}
-      
-              <button onClick={()=>setShowEmoji(!showEmoji)}
-              className="btn-emoji btn-primary" >😊</button>
-              <button className="btn-primary" onClick={sendMessage}>
-                Send
-              </button>
-            </div>
-          </>
-        )}
+          {currentChat && (
+            <>
+              <div className="messages-area">
+                {/* <h5>You are chatting with {currentChat}</h5> */}
+                <Message messages={messages} user={user} onBack={handleBackToChat} />
+                {isTyping && (
+                  <p style={{ fontSize: "12px", color: "pink" }}>{currentChat} is typing</p>
+                )}
+              </div>
+              <div className="message-field">
+                <input
+                  type="text"
+                  placeholder="Types a message.."
+                  value={currentMessage}
+                  onChange={handleTyping}
+                />
+                {showEmoji && <div className="emoji-box"><EmojiPicker onEmojiClick={onEmojiClick} /></div>}
+
+                <button onClick={() => setShowEmoji(!showEmoji)}
+                  className="btn-emoji btn-primary" >😊</button>
+                <button className="btn-primary" onClick={sendMessage}>
+                  Send
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      </div>
-      </>
-    
+    </>
+
   );
 }
