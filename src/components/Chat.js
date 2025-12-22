@@ -183,9 +183,11 @@ export default function Chat({ user, setUser }) {
             </>
           )}
         </div>
+        <div className="text-center fw-4 fs-4 py-3 my-3">
         {isTyping && (
                   <p className="typing-indicator">{currentChat} is typing</p>
                 )}
+                </div>
       </div>
     </>
 
