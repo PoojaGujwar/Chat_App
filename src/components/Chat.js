@@ -68,7 +68,7 @@ export default function Chat({ user, setUser }) {
       if (sender === currentChat && receiver === user.username) {
         setTimeout(()=>{
  setIsTyping(false);
-        },500)
+        },1000)
        
       }
     };
@@ -82,7 +82,8 @@ export default function Chat({ user, setUser }) {
     };
   }, [currentChat, user.username]);
 
-  const fetchMessage = async (receiver) => {
+
+    const fetchMessage = async (receiver) => {
     try {
       const { data } = await axios.get(
         `${backendUrl}/messages`,
@@ -95,6 +96,7 @@ export default function Chat({ user, setUser }) {
       console.error("Error fetching message", error);
     }
   };
+  
 
   const sendMessage = () => {
     const messageData = {
@@ -154,18 +156,18 @@ export default function Chat({ user, setUser }) {
           {users.map((u) => (
             <div
               className={`chat-user ${currentChat === u.username ? "active" : ""}`}
-              onClick={() => fetchMessage(u.username)}>{u.username}</div>
+              onChange={() => fetchMessage(u.username)}>{u.username}</div>
           ))}
         </div>
         <div className="chat-main">
           {currentChat && (
             <>
               <div className="messages-area">
-                {/* <h5>You are chatting with {currentChat}</h5> */}
+                <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
-                 {isTyping && (
+                 {isTyping? (
                   <div className="typing-indicator">{currentChat} is typing</div>
-                )}
+                ):""}
                 
               </div>
               <div className="message-field">
