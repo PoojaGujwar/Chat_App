@@ -127,7 +127,7 @@ export default function Chat({ user, setUser }) {
         sender: user.username,
         receiver: currentChat
       })
-    }, 1000)
+    }, 2500)
   }
   const handleLogout = () => {
     setUser(null)
@@ -159,17 +159,15 @@ export default function Chat({ user, setUser }) {
               onClick={() => fetchMessage(u.username)}>{u.username}</div>
           ))}
         </div>
-        {/* className="chat-main" */}
-        <div>
+        <div className="chat-main">
           {currentChat && (
             <>
-            {/* className="messages-area" */}
-              <div>
+              <div className="messages-area" >
                 <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
-                {/* className="typing-indicator" */}
+               
                  {isTyping && (
-                  <div>{currentChat} is typing</div>
+                  <div  className="typing-indicator">{currentChat} is typing</div>
                 )}
                 
               </div>
