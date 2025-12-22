@@ -1,7 +1,7 @@
 
 .message-list {
     height: 100%;
-    /* overflow-x: auto; */
+    overflow-x: auto;
     padding: 10px;
     background-color: #f9f9f9;
 }

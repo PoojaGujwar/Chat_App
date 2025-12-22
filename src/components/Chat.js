@@ -165,9 +165,6 @@ export default function Chat({ user, setUser }) {
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
                 
               </div>
-              {isTyping && (
-                  <p className="typing-indicator">{currentChat} is typing</p>
-                )}
               <div className="message-field">
                 <input
                   type="text"
@@ -186,6 +183,9 @@ export default function Chat({ user, setUser }) {
             </>
           )}
         </div>
+        {isTyping && (
+                  <p className="typing-indicator">{currentChat} is typing</p>
+                )}
       </div>
     </>
 
