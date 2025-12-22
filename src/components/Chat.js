@@ -54,21 +54,19 @@ export default function Chat({ user, setUser }) {
 
   useEffect(() => {
     console.log("SOCKET REFERNCE",socketRef.current)
-    if (!socketRef.current || !currentChat) return;
+    if (!socketRef.current || !currentChat ||!user?.username) return;
+    console.log("ISTYPING",isTyping)
 
     const onTyping = ({ sender, receiver }) => {
       console.log("Typing received", sender, receiver);
       if (sender === currentChat && receiver === user.username) {
         console.log(sender, "TYPING",receiver)
         setIsTyping(true);
-      }
-    };
+      }    };
 
     const onStopTyping = ({ sender, receiver }) => {
       if (sender === currentChat && receiver === user.username) {
-        setTimeout(()=>{
- setIsTyping(false);
-        },1000)
+        setIsTyping(false)
        
       }
     };
@@ -80,7 +78,7 @@ export default function Chat({ user, setUser }) {
       socketRef.current.off("typing", onTyping);
       socketRef.current.off("stop_typing", onStopTyping);
     };
-  }, [currentChat, user.username]);
+  }, [currentChat, user?.username]);
 
 
     const fetchMessage = async (receiver) => {
@@ -109,14 +107,15 @@ export default function Chat({ user, setUser }) {
   };
 
   const handleTyping = (e) => {
-    setCurrentMessage(e.target.value)
+    setCurrentMessage(e.target.value);
+
     console.log("Emit typinnn", currentChat, e.target.value, user.username)
-    if (socketRef.current && currentChat) {
+   if (!currentChat || !socketRef.current) return;
     socketRef.current.emit("typing", {
         sender: user.username,
         receiver: currentChat
       })
-    }
+    
 
 
     if (typingRef.current) {
@@ -168,9 +167,9 @@ export default function Chat({ user, setUser }) {
                 <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
                 {/* className="typing-indicator" */}
-                 {!isTyping ? (
+                 {isTyping && (
                   <div>{currentChat} is typing</div>
-                ):"Helllo"}
+                )}
                 
               </div>
               <div className="message-field">
