@@ -163,6 +163,9 @@ export default function Chat({ user, setUser }) {
               <div className="messages-area">
                 {/* <h5>You are chatting with {currentChat}</h5> */}
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
+                 {isTyping && (
+                  <div className="typing-indicator">{currentChat} is typing</div>
+                )}
                 
               </div>
               <div className="message-field">
@@ -183,11 +186,8 @@ export default function Chat({ user, setUser }) {
             </>
           )}
         </div>
-        <div className="text-center fw-4 fs-4 py-3 my-3">
-        {isTyping && (
-                  <p className="typing-indicator">{currentChat} is typing</p>
-                )}
-                </div>
+  
+       
       </div>
     </>
 
