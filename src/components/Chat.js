@@ -168,9 +168,9 @@ export default function Chat({ user, setUser }) {
                 <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
                 {/* className="typing-indicator" */}
-                 {isTyping? (
+                 {!isTyping ? (
                   <div>{currentChat} is typing</div>
-                ):""}
+                ):"Helllo"}
                 
               </div>
               <div className="message-field">
