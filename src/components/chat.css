@@ -117,6 +117,16 @@ transition: 0.5s;
     right: 20px;
     z-index: 1000;
 }
+.typing-indicator {
+  position: sticky;
+  bottom: 5px;
+  background: white;
+  padding: 4px 10px;
+  font-size: 13px;
+  color: darkgreen;
+  margin-left: 10px;
+  margin-top: 5px;
+}
 
 @media (max-width: 768px) {
   .message-field {

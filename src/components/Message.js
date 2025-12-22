@@ -3,7 +3,7 @@ const Message = ({ messages, user, onBack }) => {
     let lastDate = ""
     const formateTime = (time) => {
         const date = new Date(time);
-        console.log(date, messages)
+        // console.log(date, messages)
         return date.toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit"

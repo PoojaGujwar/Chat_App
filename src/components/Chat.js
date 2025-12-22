@@ -17,9 +17,10 @@ export default function Chat({ user, setUser }) {
   const [showEmoji, setShowEmoji] = useState(false)
   const navigate = useNavigate()
   const socketRef = React.useRef(null)
+  const backendUrl = "https://chat-chat-if63.onrender.com"
 
   useEffect(() => {
-    socketRef.current = io("https://chat-chat-if63.onrender.com");
+    socketRef.current = io("https://chat-chat-if63.onrender.com",{transports:["websocket"]});
 
     return () => {
       socketRef.current.disconnect();
@@ -31,7 +32,7 @@ export default function Chat({ user, setUser }) {
   const fetchUsers = async () => {
     try {
       const { data } = await axios.get(
-        "https://chat-chat-if63.onrender.com/users",
+        `${backendUrl}/users`,
         { params: { currentUser: user.username } }
       );
       setUsers(data);
@@ -52,18 +53,23 @@ export default function Chat({ user, setUser }) {
   }, [user]);
 
   useEffect(() => {
+    console.log("SOCKET REFERNCE",socketRef.current)
     if (!socketRef.current || !currentChat) return;
 
     const onTyping = ({ sender, receiver }) => {
       console.log("Typing received", sender, receiver);
       if (sender === currentChat && receiver === user.username) {
+        console.log(sender, "TYPING",receiver)
         setIsTyping(true);
       }
     };
 
     const onStopTyping = ({ sender, receiver }) => {
       if (sender === currentChat && receiver === user.username) {
-        setIsTyping(false);
+        setTimeout(()=>{
+ setIsTyping(false);
+        },500)
+       
       }
     };
 
@@ -79,7 +85,7 @@ export default function Chat({ user, setUser }) {
   const fetchMessage = async (receiver) => {
     try {
       const { data } = await axios.get(
-        `https://chat-chat-if63.onrender.com/messages`,
+        `${backendUrl}/messages`,
         { params: { sender: user.username, receiver } }
       );
       console.log(data);
@@ -94,7 +100,7 @@ export default function Chat({ user, setUser }) {
     const messageData = {
       sender: user.username, receiver: currentChat, message: currentMessage, createdAt: new Date().toISOString()
     }
-    console.log(messageData)
+    console.log(messageData,"SEND MESSAGE")
     socketRef.current.emit("send_message", messageData)
     setMessage((prev) => [...prev, messageData])
     setCurrentMessage('')
@@ -102,13 +108,14 @@ export default function Chat({ user, setUser }) {
 
   const handleTyping = (e) => {
     setCurrentMessage(e.target.value)
-    console.log("Emit typinnn", currentChat, e.target.value)
+    console.log("Emit typinnn", currentChat, e.target.value, user.username)
     if (socketRef.current && currentChat) {
-      socketRef.current.emit("typing", {
+    socketRef.current.emit("typing", {
         sender: user.username,
         receiver: currentChat
       })
     }
+
 
     if (typingRef.current) {
       clearTimeout(typingRef.current)
@@ -156,10 +163,11 @@ export default function Chat({ user, setUser }) {
               <div className="messages-area">
                 {/* <h5>You are chatting with {currentChat}</h5> */}
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
-                {isTyping && (
-                  <p style={{ fontSize: "100px", color: "" }}>{currentChat} is typing</p>
-                )}
+                
               </div>
+              {isTyping && (
+                  <p className="typing-indicator">{currentChat} is typing</p>
+                )}
               <div className="message-field">
                 <input
                   type="text"
