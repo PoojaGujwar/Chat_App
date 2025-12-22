@@ -58,13 +58,14 @@ export default function Chat({ user, setUser }) {
     console.log("ISTYPING",isTyping)
 
     const onTyping = ({ sender, receiver }) => {
-      console.log("Typing received", sender, receiver);
+      if(sender === user.username) return;
       if (sender === currentChat && receiver === user.username) {
         console.log(sender, "TYPING",receiver)
         setIsTyping(true);
       }    };
 
     const onStopTyping = ({ sender, receiver }) => {
+      if(sender === user.username) return;
       if (sender === currentChat && receiver === user.username) {
         setIsTyping(false)
        
