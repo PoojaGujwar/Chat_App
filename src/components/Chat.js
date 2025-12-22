@@ -156,17 +156,20 @@ export default function Chat({ user, setUser }) {
           {users.map((u) => (
             <div
               className={`chat-user ${currentChat === u.username ? "active" : ""}`}
-              onChange={() => fetchMessage(u.username)}>{u.username}</div>
+              onClick={() => fetchMessage(u.username)}>{u.username}</div>
           ))}
         </div>
-        <div className="chat-main">
+        {/* className="chat-main" */}
+        <div>
           {currentChat && (
             <>
-              <div className="messages-area">
+            {/* className="messages-area" */}
+              <div>
                 <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
+                {/* className="typing-indicator" */}
                  {isTyping? (
-                  <div className="typing-indicator">{currentChat} is typing</div>
+                  <div>{currentChat} is typing</div>
                 ):""}
                 
               </div>
