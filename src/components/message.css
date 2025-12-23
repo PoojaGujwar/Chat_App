@@ -23,12 +23,30 @@
     justify-content: space-between;
 }
 .time{
+    font-weight: 300;
+}
+.mess-seen{
+    font-weight: 300;
+}
+.message-meta{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
     position: absolute;
     bottom: 4px;
     right: 10px;
+}
+.message-message{
+     display: flex;
+    justify-content: start;
+    align-items: center;
+    /* gap: 4px;
     font-size: 11px;
-    opacity: 0.8;
-    color: #f1f1f1;
+    position: absolute;
+    bottom: 4px;
+    left: 10px; */
 }
 .date-separate{
     width: 100%;

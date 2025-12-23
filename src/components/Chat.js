@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Message from "./Message";
 import "./chat.css"
 import { io } from "socket.io-client"
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import EmojiPicker from "emoji-picker-react";
 
 
@@ -20,29 +20,29 @@ export default function Chat({ user, setUser }) {
   const backendUrl = "https://chat-chat-if63.onrender.com"
 
   useEffect(() => {
-    socketRef.current = io("https://chat-chat-if63.onrender.com",{transports:["websocket"]});
+    socketRef.current = io("https://chat-chat-if63.onrender.com", { transports: ["websocket"] });
 
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
   useEffect(() => {
-  if (!user?.username) return;
+    if (!user?.username) return;
 
-  const fetchUsers = async () => {
-    try {
-      const { data } = await axios.get(
-        `${backendUrl}/users`,
-        { params: { currentUser: user.username } }
-      );
-      setUsers(data);
-    } catch (error) {
-      console.error("Error fetching users", error);
-    }
-  };
+    const fetchUsers = async () => {
+      try {
+        const { data } = await axios.get(
+          `${backendUrl}/users`,
+          { params: { currentUser: user.username } }
+        );
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users", error);
+      }
+    };
 
-  fetchUsers();
-}, [user]);
+    fetchUsers();
+  }, [user]);
 
 
 
@@ -53,22 +53,23 @@ export default function Chat({ user, setUser }) {
   }, [user]);
 
   useEffect(() => {
-    console.log("SOCKET REFERNCE",socketRef.current)
-    if (!socketRef.current || !currentChat ||!user?.username) return;
-    console.log("ISTYPING",isTyping)
+    console.log("SOCKET REFERNCE", socketRef.current)
+    if (!socketRef.current || !currentChat || !user?.username) return;
+    console.log("ISTYPING", isTyping)
 
     const onTyping = ({ sender, receiver }) => {
-      if(sender === user.username) return;
+      if (sender === user.username) return;
       if (sender === currentChat && receiver === user.username) {
-        console.log(sender, "TYPING",receiver)
+        console.log(sender, "TYPING", receiver)
         setIsTyping(true);
-      }    };
+      }
+    };
 
     const onStopTyping = ({ sender, receiver }) => {
-      if(sender === user.username) return;
+      if (sender === user.username) return;
       if (sender === currentChat && receiver === user.username) {
         setIsTyping(false)
-       
+
       }
     };
 
@@ -80,9 +81,22 @@ export default function Chat({ user, setUser }) {
       socketRef.current.off("stop_typing", onStopTyping);
     };
   }, [currentChat, user?.username]);
+ //message seen
+ useEffect(()=>{
+  if(!socketRef.current) return
 
+  socketRef.current.on("seen_update",({receiver})=>{
+    if(receiver === currentChat){
+      setMessage((prev)=>prev.map((msg)=>({...msg,seen:true})))
+    }
+  })
+   return ()=>{
+      socketRef.current.off("seen_update")
+    }
 
-    const fetchMessage = async (receiver) => {
+ },[currentChat])
+
+  const fetchMessage = async (receiver) => {
     try {
       const { data } = await axios.get(
         `${backendUrl}/messages`,
@@ -91,17 +105,23 @@ export default function Chat({ user, setUser }) {
       console.log(data);
       setMessage(data);
       setCurrentChat(receiver);
+
+      //seen
+
+      await axios.post(`${backendUrl}/messages/seen`,{sender: receiver,receiver: user.username})
+
+      socketRef.current.emit("mess_seen",({sender: receiver, receiver:user.username}))
     } catch (error) {
       console.error("Error fetching message", error);
     }
   };
-  
+
 
   const sendMessage = () => {
     const messageData = {
       sender: user.username, receiver: currentChat, message: currentMessage, createdAt: new Date().toISOString()
     }
-    console.log(messageData,"SEND MESSAGE")
+    console.log(messageData, "SEND MESSAGE")
     socketRef.current.emit("send_message", messageData)
     setMessage((prev) => [...prev, messageData])
     setCurrentMessage('')
@@ -111,12 +131,12 @@ export default function Chat({ user, setUser }) {
     setCurrentMessage(e.target.value);
 
     console.log("Emit typinnn", currentChat, e.target.value, user.username)
-   if (!currentChat || !socketRef.current) return;
+    if (!currentChat || !socketRef.current) return;
     socketRef.current.emit("typing", {
-        sender: user.username,
-        receiver: currentChat
-      })
-    
+      sender: user.username,
+      receiver: currentChat
+    })
+
 
 
     if (typingRef.current) {
@@ -165,11 +185,11 @@ export default function Chat({ user, setUser }) {
               <div className="messages-area" >
                 <h5>You are chatting with {currentChat}</h5>
                 <Message messages={messages} user={user} onBack={handleBackToChat} />
-               
-                 {isTyping && (
-                  <div  className="typing-indicator">{currentChat} is typing</div>
+
+                {isTyping && (
+                  <div className="typing-indicator">{currentChat} is typing</div>
                 )}
-                
+
               </div>
               <div className="message-field">
                 <input
@@ -189,8 +209,8 @@ export default function Chat({ user, setUser }) {
             </>
           )}
         </div>
-  
-       
+
+
       </div>
     </>
 

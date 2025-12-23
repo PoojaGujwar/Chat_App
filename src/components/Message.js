@@ -37,19 +37,28 @@ const Message = ({ messages, user, onBack }) => {
 
                 {messages.map((msg, index) => {
                     const messageDate = new Date(msg.createdAt).toDateString();
-                    const showDate = messageDate != lastDate
+                    const showDate = messageDate !== lastDate
                     lastDate = messageDate
                     return (
                         <div key={index}>
                             {showDate && <div className="date-separate">{formateDate(msg.createdAt)}</div>}
                             <div className="message-row">
-                            <div
+                                <div
 
-                                className={`message ${msg.sender === user.username ? "sent" : "received"
-                                    }`}
-                            >
-                                <span>{msg.message}</span>
-                                <span className="time">{formateTime(msg.createdAt)}</span>
+                                    className={`message ${msg.sender === user.username ? "sent" : "received"
+                                        }`}
+                                >
+        
+                                    <span className="m">{msg.message}</span>
+                                    <div className="message-meta">
+                                    <span className="time">{formateTime(msg.createdAt)}</span>
+                            
+                                    {msg.sender === user.username && (
+                                        <span className="mess-seen">
+                                            {msg.seen ? "✔✔ " : "✔ "}
+                                        </span>
+                )}
+                </div>
                             </div>
                             </div>
                         </div>
