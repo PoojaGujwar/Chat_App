@@ -1,7 +1,7 @@
 
 .message-list {
     height: 100%;
-    overflow-x: auto;
+    overflow-y:scroll;
     padding: 10px;
     background-color: #f9f9f9;
 }
@@ -37,16 +37,6 @@
     position: absolute;
     bottom: 4px;
     right: 10px;
-}
-.message-message{
-     display: flex;
-    justify-content: start;
-    align-items: center;
-    /* gap: 4px;
-    font-size: 11px;
-    position: absolute;
-    bottom: 4px;
-    left: 10px; */
 }
 .date-separate{
     width: 100%;

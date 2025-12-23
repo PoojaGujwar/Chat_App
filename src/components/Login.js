@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Register from './Register'
+import { Link} from 'react-router-dom'
+import PasswordInput from './PasswordInput'
 
 export default function Login({ setUser }) {
   const [username, setUsername] = useState('')
@@ -25,6 +25,7 @@ export default function Login({ setUser }) {
       }, 2000)
     }
   }
+ 
 
   return (
     <div className='auth-container'>
@@ -40,13 +41,7 @@ export default function Login({ setUser }) {
             className='form-control'
             onChange={(e) => setUsername(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder='password'
-            value={password}
-            className='form-control'
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <PasswordInput value={password}  onChange={(e) => setPassword(e.target.value)}  placeholder='Enter password' />
           <button>Login</button>
         </form>
         <p>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router";
+import PasswordInput from "./PasswordInput";
 
 const Register = ({ setUser }) => {
   const [username, setUsername] = useState("");
@@ -47,14 +48,15 @@ const Register = ({ setUser }) => {
           className="form-control"
           onChange={(e) => setUsername(e.target.value)}
         />
-        <input
+        <PasswordInput value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter passwor"/>
+        {/* <input
           type="password"
           placeholder="password"
           name="password"
           value={password}
           className="form-control"
           onChange={(e) => setPassword(e.target.value)}
-        />
+        /> */}
         <button
           onClick={handleRegister}
         >
