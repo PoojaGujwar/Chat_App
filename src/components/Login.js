@@ -36,7 +36,7 @@ export default function Login({ setUser }) {
         {loginSuccess && <p>{loginSuccess}</p>}
         <form onSubmit={handleLogin}>
           <input type='text'
-            placeholder='username'
+            placeholder='Enter username'
             value={username}
             className='form-control'
             onChange={(e) => setUsername(e.target.value)}
