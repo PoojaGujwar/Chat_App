@@ -4,8 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap/dist/js/bootstrap.min.js"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import { useState } from "react";
-import Chat from "./components/Chat";
-import Login from "./components/Login";
+import Chat from "./components/Chat.js";
+import Login from "./components/Login.js";
 import "./styles.css"
 
 
