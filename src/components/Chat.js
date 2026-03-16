@@ -9,8 +9,6 @@ import EmojiPicker from "emoji-picker-react";
 
 export default function Chat({ user, setUser }) {
 
-  const bottomRef = React.useRef(null);
-
   const [users, setUsers] = useState([]);
   const [messages, setMessage] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -83,7 +81,7 @@ export default function Chat({ user, setUser }) {
       socketRef.current.off("typing", onTyping);
       socketRef.current.off("stop_typing", onStopTyping);
     };
-  }, [currentChat, user?.username, isTyping]);
+  }, [currentChat, user?.username]);
  //message seen
  useEffect(()=>{
   if(!socketRef.current) return
@@ -165,9 +163,7 @@ export default function Chat({ user, setUser }) {
     setCurrentMessage((preValue) => preValue + emojiData.emoji)
     setShowEmoji(false)
   }
- useEffect(() => {
-  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-}, [messages]);
+
   return (
     <div style={{minHeight:"100vh"}}>
       <div className="chat-container">
