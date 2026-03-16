@@ -190,7 +190,6 @@ export default function Chat({ user, setUser }) {
                 {isTyping && (
                   <div className="typing-indicator">{currentChat} is typing</div>
                 )}
-<div ref={bottomRef}></div>
               </div>
               <div className="message-field">
                 <input
