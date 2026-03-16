@@ -81,7 +81,7 @@ export default function Chat({ user, setUser }) {
       socketRef.current.off("typing", onTyping);
       socketRef.current.off("stop_typing", onStopTyping);
     };
-  }, [currentChat, user?.username]);
+  }, [currentChat, user?.username,isTyping]);
  //message seen
  useEffect(()=>{
   if(!socketRef.current) return
