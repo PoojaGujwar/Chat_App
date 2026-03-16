@@ -8,6 +8,9 @@ import EmojiPicker from "emoji-picker-react";
 
 
 export default function Chat({ user, setUser }) {
+
+  const bottomRef = React.useRef(null);
+
   const [users, setUsers] = useState([]);
   const [messages, setMessage] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -162,15 +165,17 @@ export default function Chat({ user, setUser }) {
     setCurrentMessage((preValue) => preValue + emojiData.emoji)
     setShowEmoji(false)
   }
+ useEffect(() => {
+  bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [messages]);
   return (
-    <>
+    <div style={{minHeight:"100vh"}}>
       <div className="chat-container">
         <div className="chat-header">
           <h1>Chat App</h1>
           <button onClick={handleLogout} className="btn-primary">Logout</button>
         </div>
-      </div>
-      <div className="chat-body">
+         <div className="chat-body">
         <div className="chat-sidebar">
           <h3>Chats</h3>
           {users.map((u) => (
@@ -189,7 +194,7 @@ export default function Chat({ user, setUser }) {
                 {isTyping && (
                   <div className="typing-indicator">{currentChat} is typing</div>
                 )}
-
+<div ref={bottomRef}></div>
               </div>
               <div className="message-field">
                 <input
@@ -212,7 +217,9 @@ export default function Chat({ user, setUser }) {
 
 
       </div>
-    </>
+      </div>
+     
+    </div>
 
   );
 }

@@ -10,6 +10,13 @@ const Register = ({ setUser }) => {
   const [registerationSuccess, setRegisterationSuccess] = useState(null);
 
   const handleRegister = async () => {
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])/;
+     if (!passwordRegex.test(password)) {
+    setRegisterationSuccess(
+      "Password must contain at least 1 number and 1 special symbol"
+    );
+    return;
+  }
     try {
       const { data } = await axios.post(
         `https://chat-chat-if63.onrender.com/auth/register`,
@@ -42,13 +49,13 @@ const Register = ({ setUser }) => {
         <p>{registerationSuccess}</p>
         <input
           type="text"
-          placeholder="username"
+          placeholder="Enter username"
           name="username"
           value={username}
           className="form-control"
           onChange={(e) => setUsername(e.target.value)}
         />
-        <PasswordInput value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter passwor"/>
+        <PasswordInput value={password} onChange={(e)=>setPassword(e.target.value)} placeholder="Enter password"/>
         {/* <input
           type="password"
           placeholder="password"

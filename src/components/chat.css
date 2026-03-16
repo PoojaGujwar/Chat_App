@@ -9,10 +9,11 @@ body{
 }
 .chat-container{
     width: 100%;
-    margin: 20px auto;
-    background: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden; */
+    /* overflow-x: visible; */
 }
 .chat-header{
     display: flex;
@@ -42,7 +43,7 @@ transition: 0.5s;
 }
 .chat-body{
     display: flex;
-    height: calc(100vh - 100px);
+    flex: 1;
 }
 .chat-sidebar{
     width: 30%;
@@ -75,7 +76,7 @@ transition: 0.5s;
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
-    height: 100%;
+   flex: 1;
     position: relative;
 }
 .messages-area{
@@ -83,6 +84,9 @@ transition: 0.5s;
     padding: 15px;
     overflow-y: auto;
     background-color: #f9f9ff;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: flex-end; */
 }
 .message-field{
     display: flex;

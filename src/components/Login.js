@@ -10,8 +10,10 @@ export default function Login({ setUser }) {
 
   const handleLogin = async (e) => {
     e.preventDefault()
+    console.log(username, "Username", password)
     try {
       const { data } = await axios.post(`https://chat-chat-if63.onrender.com/auth/login`, { username, password })
+      console.log(data)
       setUser(data)
       console.log(data)
     }
